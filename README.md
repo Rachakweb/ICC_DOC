@@ -1,4 +1,3 @@
-# ICC_DOC
 # SMC-ICCC (Surat Smart City - Integrated Command and Control Centre) Project Documentation
 
 ## 1. Project Overview
@@ -6,20 +5,153 @@ The **SMC-ICCC** project is a comprehensive digital platform designed for the Su
 
 This project aims to enhance the quality of life for citizens by enabling data-driven governance, improving response times to urban issues, and ensuring transparency in civic operations.
 
+![Smart City Command Center](C:/Users/user/.gemini/antigravity/brain/360712b8-e4e1-4b45-b7ff-6f6edcc34f00/uploaded_media_2_1769670044838.png)
+
 ---
 
 ## 2. Key Features
-*   **Real-time City Dashboard**: A centralized view of critical city metrics such as Air Quality Index (AQI), Traffic Mobility, Emergency Dispatch status, and System Uptime.
-*   **Live Traffic Monitoring**: Integration of simulated live CCTV feeds from key city junctions (e.g., Sahara Darwaja, Delhi Gate) to monitor congestion.
-*   **Environmental Monitoring**: Detailed breakdown of environmental data including PM2.5, PM10, and Humidity levels with status indicators (Good, Moderate, Poor).
-*   **Field Agent Portal**: A dedicated mobile-responsive interface for field officers to conduct on-site assessments for various categories like Waterbodies, Bulk Waste Generators (BWG), and Schools.
-*   **Assessment Analysis**: A dashboard module to analyze field reports, calculate compliance rates, and view image evidence submitted by agents.
+
+### 2.1 About the ICCC
+The platform is designed to improve quality of life through data-driven governance, ensuring safety, security, and seamless public service delivery.
+
+![About the ICCC](C:/Users/user/.gemini/antigravity/brain/360712b8-e4e1-4b45-b7ff-6f6edcc34f00/uploaded_media_0_1769670044838.png)
+
+**Code Reference (`src/app/page.tsx`):**
+```tsx
+<section id="about" className="py-24 bg-secondary/30 border-y border-border">
+    <div className="container px-6 mx-auto text-center">
+        <h2 className="text-3xl font-bold mb-6">About the ICCC</h2>
+        <p className="max-w-4xl mx-auto text-lg text-muted-foreground leading-relaxed">
+        The Integrated Command and Control Centre (ICCC) is a cornerstone of the Smart City mission.
+        Designed to improve the quality of life for citizens, it ensures safety, security, and seamless public service delivery through data-driven governance.
+        By integrating surveillance, traffic management, and utility monitoring into a centralized platform, the ICCC enables real-time decision-making and rapid emergency response.
+        </p>
+    </div>
+</section>
+```
+
+### 2.2 Core Capabilities
+The ICCC empowers Surat with cutting-edge technology, featuring real-time analytics, centralized monitoring, AI-powered detection, and automated alerts.
+
+![Core Capabilities](C:/Users/user/.gemini/antigravity/brain/360712b8-e4e1-4b45-b7ff-6f6edcc34f00/uploaded_media_1_1769670044838.png)
+
+**Code Reference (`src/components/Features.tsx`):**
+```tsx
+const features = [
+    {
+        icon: Database,
+        title: 'Real-time Analytics',
+        description: 'Processing millions of data points from sensors city-wide to provide actionable insights instantaneously.'
+    },
+    {
+        icon: Monitor,
+        title: 'Centralized Monitoring',
+        description: 'A single pane of glass view for all city operations, traffic, and emergency services.'
+    },
+    {
+        icon: Cpu,
+        title: 'AI-Powered Detection',
+        description: 'Advanced computer vision algorithms to automatically detect traffic violations, potholes, and waste accumulation.'
+    },
+    // ... more features
+];
+```
+
+### 2.3 Integrated Sectors section
+The system integrates various urban management sectors including Traffic & Mobility, Waste Management, Safety & Surveillance, and Smart Lighting.
+
+![Integrated Sectors](C:/Users/user/.gemini/antigravity/brain/360712b8-e4e1-4b45-b7ff-6f6edcc34f00/uploaded_media_3_1769670044838.png)
+
+**Code Reference (`src/components/Sectors.tsx`):**
+```tsx
+const sectors = [
+    {
+        icon: Car,
+        title: 'Traffic & Mobility',
+        stat: 'ITMS Phase II Active',
+        image: 'https://images.unsplash.com/photo-1494522855154-9297ac14b55f?q=80&w=2070'
+    },
+    {
+        icon: Trash2,
+        title: 'Waste Management',
+        stat: '98% Door-to-Door Compliance',
+        image: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?q=80&w=2070'
+    },
+    // ... other sectors
+];
+```
 
 ---
 
-## 3. User Flows
+## 3. Real-time Dashboard
+The dashboard provides a centralized view of critical city metrics, including live traffic feeds and environmental data.
 
-### 3.1 Public / City Official Flow (Dashboard)
+![Real-time Statistics](C:/Users/user/.gemini/antigravity/brain/360712b8-e4e1-4b45-b7ff-6f6edcc34f00/uploaded_media_4_1769670044838.png)
+
+### 3.1 Live Traffic Camera Component
+The `TrafficCamera` component simulates a live CCTV feed with overlay data for traffic status and vehicle counts.
+
+**Code Reference (`src/components/TrafficCamera.tsx`):**
+```tsx
+export default function TrafficCamera({ id, location, status, imageUrl }: TrafficCameraProps) {
+    // ... state management for time and vehicle count
+
+    return (
+        <div className="group relative aspect-video bg-black rounded-lg overflow-hidden border border-border/50 shadow-2xl transition-all duration-300 hover:border-primary/50">
+            {/* Real Visual Background */}
+            <div
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-[10s] group-hover:scale-110"
+                style={{ backgroundImage: `url('${imageUrl}')` }}
+            />
+
+            {/* AI Analytics Overlay */}
+            <div className="absolute top-2 right-2 z-20 text-right font-mono text-white space-y-0.5">
+                <div className="text-[8px] bg-primary/20 text-primary-foreground px-1 py-0.5 rounded border border-primary/30 backdrop-blur-sm">
+                    AI OBJECT DETECTION: ENABLED
+                </div>
+                <div className="text-[10px] font-bold text-yellow-500 drop-shadow-md">
+                    VEHICLES: {vehicleCount > 0 ? vehicleCount : '...'}
+                </div>
+            </div>
+            {/* ... other overlays */}
+        </div>
+    );
+}
+```
+
+### 3.2 Dashboard Data Integration
+The dashboard page fetches real-time stats and displays them in a responsive grid.
+
+**Code Reference (`src/app/dashboard/page.tsx`):**
+```tsx
+export default function Dashboard() {
+    const [cityStats, setCityStats] = React.useState<any>(null);
+
+    const fetchStats = async () => {
+        try {
+            const res = await fetch('/api/city-stats');
+            const data = await res.json();
+            setCityStats(data);
+        } catch (error) {
+            console.error('Failed to fetch stats:', error);
+        }
+    };
+
+    React.useEffect(() => {
+        fetchStats();
+        const interval = setInterval(fetchStats, 300000); // Refresh every 5 minutes
+        return () => clearInterval(interval);
+    }, []);
+
+    // ... render logic
+}
+```
+
+---
+
+## 4. User Flows
+
+### 4.1 Public / City Official Flow (Dashboard)
 This flow represents how a city official or administrator monitors the city's status.
 
 ```mermaid
@@ -44,7 +176,7 @@ graph TD
     end
 ```
 
-### 3.2 Field Agent Flow (Data Collection)
+### 4.2 Field Agent Flow (Data Collection)
 This flow illustrates how field agents submit ground-level data.
 
 ```mermaid
@@ -67,7 +199,7 @@ graph TD
 
 ---
 
-## 4. API Reference
+## 5. API Reference
 
 ### GET `/api/city-stats`
 Fetches real-time (and simulated) statistical data for the city.
@@ -97,49 +229,6 @@ Fetches real-time (and simulated) statistical data for the city.
     "status": "Stable"
   }
 }
-```
-
----
-
-## 5. Important Code Snippets
-
-### 5.1 Dashboard Data Fetching (`src/app/dashboard/page.tsx`)
-This effect hook ensures the dashboard stays updated by polling the API every 5 minutes.
-```tsx
-React.useEffect(() => {
-    fetchStats();
-    const interval = setInterval(fetchStats, 300000); // Refresh every 5 minutes
-    return () => clearInterval(interval);
-}, []);
-```
-
-### 5.2 API Logic - Smart Caching & External Fetching (`src/app/api/city-stats/route.ts`)
-The API intelligently combines real data (Open-Meteo for AQI) with simulated business logic (Traffic based on time of day) to provide a robust demonstration.
-```typescript
-// Fetch AQI from Open-Meteo
-const aqiResponse = await fetch(
-    `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm2_5,pm10,us_aqi,relative_humidity_2m`
-);
-
-// Simulated Traffic Logic based on Time
-const hours = istTime.getUTCHours();
-if ((hours >= 8 && hours <= 11) || (hours >= 17 && hours <= 20)) {
-    trafficStatus = 'Heavy';
-    trafficValue = 'High';
-}
-```
-
-### 5.3 Dynamic Assessment Form (`src/types/assessment.ts`)
-The system is highly extensible, allowing new assessment types to be added simply by defining them in the configuration object.
-```typescript
-export const ASSESSMENT_QUESTIONS: Record<AssessmentType, AssessmentQuestion[]> = {
-    Waterbody: [
-        { id: '1', text: 'Is the waterbody found at the location?', type: 'yes-no' },
-        { id: '2', text: 'Is there any solid waste floating/visible in waterbody?', type: 'yes-no' },
-        // ... more questions
-    ],
-    // ... other categories
-};
 ```
 
 ---
